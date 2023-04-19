@@ -1,0 +1,56 @@
+<head>
+
+</head>
+
+<html>
+  <body>
+
+    {% load static %}
+    <img src="{% static 'gv_logo.png' %}" />
+
+    <h3> Math Placement </h3>
+
+    <p width=300>
+      Enter the student's available data below leaving blank any
+      fields for which data is not available.
+    </p>
+
+    <form action="" method="post">
+      {% csrf_token %}
+
+      {{ gpa_form.non_field_errors }}
+      <table cellpadding=5>
+	<tr>
+	  <td align=right> <b>GPA:</b> </td>
+	  <td> {{ gpa_form.gpa }}</td>
+	  <td> {{ gpa_form.gpa.errors }} </td>
+	</tr>
+	<tr>
+	  <td align=right> <b> SAT Math:</b> </td>
+	  <td> {{ gpa_form.sat }}</td>
+	  <td> {{ gpa_form.sat.errors }} </td>
+	</tr>
+	<tr>
+	  <td align=right> <b> ACT Math:</b> </td>
+	  <td> {{ gpa_form.act }}</td>
+	  <td> {{ gpa_form.act.errors }} </td>
+	</tr>
+	<tr>
+	  <td colspan=2 align=center>
+	    <input type="submit" name="submit" value="Submit">
+	    <input type="submit" name="clear" value="Clear Form">
+	  </td>
+	</tr>
+      </table>
+
+    </form>
+
+    {% if placement %}
+    <p>
+      MTH placement: <b>{{ placement }}</b>.
+    </p>
+    {% endif %}
+
+  </body>
+</html>
+

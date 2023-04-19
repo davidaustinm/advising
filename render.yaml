@@ -1,0 +1,20 @@
+databases:
+  - name: advising
+    databaseName: advising
+    user: advising
+
+services:
+  - type: web
+    name: advising
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn advising.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: advising
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
