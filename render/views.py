@@ -37,29 +37,29 @@ def get_placement(gpa, sat, act):
     if gpa != None:
         if sat == None and act == None:
             if gpa <= 3.2: return "MTH 108"
-            if gpa <= 3.7: return "MTH 110"
+            if gpa <= 3.7: return "MTH 108 Fulfilled"
             return "MTH 110 Fulfilled"
 
         if sat != None:
             if -11.1 + 0.87 * gpa + 0.020 * sat < 0: return "MTH 108"
-            if -14.5 + 1.35 * gpa + 0.019 * sat < 0: return "MTH 110"
+            if -14.5 + 1.35 * gpa + 0.019 * sat < 0: return "MTH 108 Fulfilled"
             if -18.6 + 1.83 * gpa + 0.018 * sat < 0: return "MTH 110 Fulfilled"
             return "MTH 122 & MTH 123 Fulfilled"
 
         if -11.1 + 0.87 * gpa + 0.020 * (17.9*act + 153.6) < 0: return "MTH 108"
-        if -14.5 + 1.35 * gpa + 0.019 * (17.9*act + 153.6) < 0: return "MTH 110"
+        if -14.5 + 1.35 * gpa + 0.019 * (17.9*act + 153.6) < 0: return "MTH 108 Fulfilled"
         if -18.6 + 1.83 * gpa + 0.018 * (17.9*act + 153.6) < 0: return "MTH 110 Fulfilled"
         return "MTH 122 & MTH 123 Fulfilled"
 
     if sat != None:
         if sat <= 450: return "MTH 108"
-        if sat <= 520: return "MTH 110"
+        if sat <= 520: return "MTH 108 Fulfilled"
         if sat <= 680: return "MTH 110 Fulfilled"
         return "MTH 122 & MTH 123 Fulfilled"
 
     sat_inferred = 17.9*act + 153.6
     if sat_inferred <= 450: return "MTH 108"
-    if sat_inferred <= 520: return "MTH 110"
+    if sat_inferred <= 520: return "MTH 108 Fulfilled"
     if sat_inferred <= 680: return "MTH 110 Fulfilled"
     return "MTH 122 & MTH 123 Fulfilled"
 
