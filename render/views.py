@@ -5,6 +5,8 @@ from django.template import loader
 
 from render.forms import GPAForm
 
+ftiacs = 4100
+year   = 2023
 # Create your views here.
 
 def index(request):
@@ -31,6 +33,13 @@ def index(request):
     }
 
     return render(request, 'render/index.html', context)
+
+def enrollment(request):
+    context = {
+        'ftiacs': ftiacs,
+        'year': year
+    }
+    return render(request, 'render/enrollment.html', context)
 
 def get_placement(gpa, sat, act):
     if gpa == None and sat == None and act == None: return "No MTH placement"
