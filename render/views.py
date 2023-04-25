@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.template import loader
 
 import pandas as pd
+import os
 
 from render.forms import GPAForm
 
@@ -37,6 +38,10 @@ def index(request):
     return render(request, 'render/index.html', context)
 
 def enrollment(request):
+    module_dir = os.path.dirname(__file__)  
+    file_path = os.path.join(module_dir, 'ftiac_data.csv')
+    df = pd.read_csv(file_path)
+    
     context = {
         'ftiacs': ftiacs,
         'year': year
