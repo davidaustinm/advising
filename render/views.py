@@ -8,14 +8,6 @@ import os
 
 from render.forms import GPAForm
 
-module_dir = os.path.dirname(__file__)  
-file_path = os.path.join(module_dir, 'ftiac_data.csv')
-df = pd.read_csv(file_path)
-ftiacs = df.iloc[-1]['FTIACs']
-year = df.iloc[-1]['Year']
-
-ftiac_frame = df.set_index('Year')
-
 # Create your views here.
 
 def index(request):
@@ -45,6 +37,14 @@ def index(request):
 
 def enrollment(request):
     
+    module_dir = os.path.dirname(__file__)  
+    file_path = os.path.join(module_dir, 'ftiac_data.csv')
+    df = pd.read_csv(file_path)
+    ftiacs = df.iloc[-1]['FTIACs']
+    year = df.iloc[-1]['Year']
+
+    ftiac_frame = df.set_index('Year')
+
     context = {
         'ftiacs': ftiacs,
         'year': year
