@@ -4,9 +4,11 @@ from django.shortcuts import render
 from django.template import loader
 
 import pandas as pd
-import os
+from plotly.offline import plot
+import plotly.graph_objs as go
 
 from render.forms import GPAForm
+import os
 
 # Create your views here.
 
