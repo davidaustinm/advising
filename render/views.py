@@ -45,8 +45,6 @@ def enrollment(request):
     ftiacs = df.iloc[-1]['FTIACs']
     year = df.iloc[-1]['Year']
 
-    df['color'] = 0.0
-    df.iloc[-1]['color'] = 1.0
     cscale = [[0.0, "rgb(128,128,255)"],
               [1.0, "rgb(255,128,128)"]]
 
