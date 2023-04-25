@@ -45,35 +45,40 @@ def enrollment(request):
     ftiacs = df.iloc[-1]['FTIACs']
     year = df.iloc[-1]['Year']
 
-    ftiac_frame = df.set_index('Year')
+    df['color'] = 0
+    df.iloc[-1]['color'] = 1
+    cscale = [[0.0, "rgb(128,128,255)"],
+              [1.0, "rgb(255,128,128)"]]
+
+#    ftiac_frame = df.set_index('Year')
 
     plot_div = plot(
         {
             'data': [
-                go.Scatter(x=df['SESSION'],
-                           y=df['CUMULATIVE_2018'],
-                           mode='lines+markers',
-                           name='2022'),
-                go.Scatter(x=df['SESSION'],
-                           y=df['CUMULATIVE_2021'],
-                           mode='lines+markers',
-                           name='2021'),
-                go.Scatter(x=df['SESSION'],
-                           y=df['FTIACS'],
-                           mode='lines+markers',
-                           name='Predicted FTIACs')
+                go.Bar(x=df['Year'],
+                       y=df['FTIACs'],
+                       marker=dict(color=df['color'],
+                                   colorscale=cscale)
+                       )
             ],
             'layout': go.Layout(
-                title="Number of Students attending Orientation",
-                xaxis_title="Session",
-                yaxis_title="Orientation attendees",
+                autosize=False,
+                width=800,
+                height=600,
+                title="We expect " + str(ftiacs) + " FTIACs in Fall " + str(year),
+                xaxis_title="Year",
+                yaxis_title="FTIACs",
                 font_family="Arial",
                 font_size  =15,
-                title_font_size=30
+                title_font_size=25,
+                xaxis = dict(
+                    tickmode='linear'
+                    )
             ),            
         },
         output_type='div',
         include_plotlyjs=False)
+
 
     context = {
         'ftiacs': ftiacs,
