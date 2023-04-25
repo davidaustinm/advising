@@ -41,6 +41,7 @@ def enrollment(request):
     module_dir = os.path.dirname(__file__)  
     file_path = os.path.join(module_dir, 'ftiac_data.csv')
     df = pd.read_csv(file_path)
+    ftiacs = df.iloc[-1]['FTIACs']
     
     context = {
         'ftiacs': ftiacs,
