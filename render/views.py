@@ -12,6 +12,12 @@ import os
 
 # Create your views here.
 
+module_dir = os.path.dirname(__file__)  
+file_path = os.path.join(module_dir, 'ftiac_data.csv')
+df = pd.read_csv(file_path)
+ftiacs = df.iloc[-1]['FTIACs']
+year = df.iloc[-1]['Year']
+
 def index(request):
     placement = None
     if request.method == 'POST':
@@ -39,12 +45,6 @@ def index(request):
 
 def enrollment(request):
     
-    module_dir = os.path.dirname(__file__)  
-    file_path = os.path.join(module_dir, 'ftiac_data.csv')
-    df = pd.read_csv(file_path)
-    ftiacs = df.iloc[-1]['FTIACs']
-    year = df.iloc[-1]['Year']
-
     cscale = [[0.0, "rgb(128,128,255)"],
               [1.0, "rgb(255,128,128)"]]
 
