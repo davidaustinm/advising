@@ -47,9 +47,38 @@ def enrollment(request):
 
     ftiac_frame = df.set_index('Year')
 
+    plot_div = plot(
+        {
+            'data': [
+                go.Scatter(x=df['SESSION'],
+                           y=df['CUMULATIVE_2018'],
+                           mode='lines+markers',
+                           name='2022'),
+                go.Scatter(x=df['SESSION'],
+                           y=df['CUMULATIVE_2021'],
+                           mode='lines+markers',
+                           name='2021'),
+                go.Scatter(x=df['SESSION'],
+                           y=df['FTIACS'],
+                           mode='lines+markers',
+                           name='Predicted FTIACs')
+            ],
+            'layout': go.Layout(
+                title="Number of Students attending Orientation",
+                xaxis_title="Session",
+                yaxis_title="Orientation attendees",
+                font_family="Arial",
+                font_size  =15,
+                title_font_size=30
+            ),            
+        },
+        output_type='div',
+        include_plotlyjs=False)
+
     context = {
         'ftiacs': ftiacs,
-        'year': year
+        'year': year,
+        'plot_div': plot_div
     }
     return render(request, 'render/enrollment.html', context)
 

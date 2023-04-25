@@ -1,5 +1,5 @@
 <head>
-
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <html>
@@ -16,6 +16,13 @@
 	day of classes in Fall {{ year }}.  
       </p>
     </div>
+
+    <div>
+      {% autoescape off %}
+      {{ plot_div }}
+      {% endautoescape %}
+    </div>
+
 
   </body>
 </html>
