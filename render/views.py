@@ -114,6 +114,7 @@ def enrollment(request):
     return render(request, 'render/enrollment.html', context)
 
 def dept(request, dept):
+    '''
     courses = course_dict[dept]
     semester = 'Fall ' + str(year)
 
@@ -180,6 +181,11 @@ def dept(request, dept):
         'depts': depts,
         'courses': courses,
         'plots': plots
+    }
+    '''
+    context = {
+        'dept': dept,
+        'depts': depts
     }
     return render(request, 'render/dept.html', context)
     
