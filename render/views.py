@@ -12,11 +12,34 @@ import os
 
 # Create your views here.
 
-module_dir = os.path.dirname(__file__)  
+module_dir = os.path.dirname(__file__)
+
+## retrieve FTIAC data
+
 file_path = os.path.join(module_dir, 'ftiac_data.csv')
 df = pd.read_csv(file_path)
 ftiacs = df.iloc[-1]['FTIACs']
 year = df.iloc[-1]['Year']
+ftiac_frame = df
+
+## retrieve course data
+
+file_path = os.path.join(module_dir, 'track_courses.csv')
+course_frame = pd.read_csv(file_path)
+
+courses = list(course_frame[course_frame.columns[0]])
+course_dict = {}
+for course in courses:
+    dept, number = course.split()
+    course_nums = course_dict.get(dept, [])
+    course_nums.append(number)
+    course_dict[dept] = course_nums
+
+for k, v in course_dict.items():
+    v.sort()
+
+depts = list(course_dict.keys())
+depts.sort()
 
 def index(request):
     placement = None
@@ -48,14 +71,12 @@ def enrollment(request):
     cscale = [[0.0, "rgb(128,128,255)"],
               [1.0, "rgb(255,128,128)"]]
 
-#    ftiac_frame = df.set_index('Year')
-
     plot_div = plot(
         {
             'data': [
-                go.Bar(x=df['Year'],
-                       y=df['FTIACs'],
-                       marker=dict(color=df['color'],
+                go.Bar(x=ftiac_frame['Year'],
+                       y=ftiac_frame['FTIACs'],
+                       marker=dict(color=ftiac_frame['color'],
                                    colorscale=cscale)
                        )
             ],
@@ -81,7 +102,8 @@ def enrollment(request):
     context = {
         'ftiacs': ftiacs,
         'year': year,
-        'plot_div': plot_div
+        'plot_div': plot_div,
+        'depts': depts
     }
     return render(request, 'render/enrollment.html', context)
 
