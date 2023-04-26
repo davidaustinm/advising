@@ -175,8 +175,6 @@ def dept(request, dept):
             include_plotlyjs=False)
         plots.append(plot_div)
 
-    if len(plots) == 0:
-        plots = None
     context = {
         'dept': dept,
         'depts': depts,
