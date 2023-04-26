@@ -187,7 +187,8 @@ def dept(request):
         'dept': 'MTH',
         'depts': depts
     }
-    return render(request, 'render/dept.html', context)
+#    return render(request, 'render/dept.html', context)
+    return enrollment(request)
     
 def get_placement(gpa, sat, act):
     if gpa == None and sat == None and act == None: return "No MTH placement"
