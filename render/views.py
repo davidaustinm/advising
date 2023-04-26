@@ -184,7 +184,8 @@ def dept(request, dept):
     }
     '''
     context = {
-        'dept': dept
+        'dept': dept,
+        'depts': depts
     }
     return render(request, 'render/dept.html', context)
 #    return enrollment(request)
