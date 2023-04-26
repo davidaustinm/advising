@@ -84,12 +84,18 @@ def enrollment(request):
                 autosize=False,
                 width=800,
                 height=600,
-                title="We expect " + str(ftiacs) + " FTIACs in Fall " + str(year),
+                title={
+                    'text':"We expect " + str(ftiacs) + " FTIACs in Fall " + str(year),
+                    'xanchor':'left',
+                    'yanchor':'top',
+                    'y':0.9,
+                    'x':0.1
+                },
                 xaxis_title="Year",
                 yaxis_title="FTIACs",
                 font_family="Arial",
                 font_size  =15,
-                title_font_size=25,
+                title_font_size=30,
                 xaxis = dict(
                     tickmode='linear'
                     )
