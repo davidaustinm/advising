@@ -41,11 +41,17 @@
     .sidenav a {font-size: 18px;}
     }
   </style>
-
     
   </head>
 
   <body>
+
+    <div class="sidenav">
+      <a href="/gv-enrollment/">FTIACs</a>
+      {% for dept in depts %}
+      <a href="/gv-enrollment/{{dept}}"> {{ dept }} </a>
+      {% endfor %}
+    </div>  
 
     <table cellpadding=10>
       <tr>
