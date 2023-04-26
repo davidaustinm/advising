@@ -186,7 +186,6 @@ def dept(request):
     context = {
         'dept': 'MTH',
         'depts': depts,
-        'plots': []
     }
     return render(request, 'render/dept.html', context)
     
