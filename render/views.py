@@ -122,7 +122,6 @@ def dept(request, dept):
     df = pd.read_csv(file_path)
 
     plots = []
-    '''
     for course in courses:
         course_num = dept + " " + course
         print(course_num, semester)
@@ -177,15 +176,9 @@ def dept(request, dept):
         plots.append(plot_div)
 
     context = {
-        'dept':dept,
-        'depts': depts,
-        'courses': courses,
-        'plots': plots
-    }
-    '''
-    context = {
         'dept': dept,
-        'depts': depts
+        'depts': depts,
+        'plots': plots
     }
     return render(request, 'render/dept.html', context)
 #    return enrollment(request)
