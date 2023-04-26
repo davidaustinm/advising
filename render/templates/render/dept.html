@@ -63,6 +63,25 @@
 	    <h1> Large enrollment {{ dept }} courses </h1>
 	  </td>
 	</tr>
+
+	{% if plots %}
+	{% for plot in plots %}
+	<tr>
+	  <td>
+	    {% autoescape off %}
+	    {{ plot }}
+	    {% endautoescape %}
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+	    <hr />
+	  </td>
+	</tr>
+	{% endfor %}
+	{% endif %}
+
+	
       </table>
     </div>
 
