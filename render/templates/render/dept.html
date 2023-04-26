@@ -48,13 +48,6 @@
 
   <body>
 
-    <div class="sidenav">
-      <a href="/gv-enrollment/">FTIACs</a>
-      {% for department in depts %}
-      <a href="/gv-enrollment/{{ department }}"> {{ department }} </a>
-      {% endfor %}
-    </div>
-    
     <div class="main">
       {% load static %}
       <img src="{% static 'gv_logo.png' %}" />
