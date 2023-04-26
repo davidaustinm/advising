@@ -113,6 +113,76 @@ def enrollment(request):
     }
     return render(request, 'render/enrollment.html', context)
 
+def dept(request, dept):
+    courses = course_dict[dept]
+    semester = 'Fall ' + str(year)
+
+    module_dir = os.path.dirname(__file__)  
+    file_path = os.path.join(module_dir, 'weekly_course.csv')
+    df = pd.read_csv(file_path)
+
+    plots = []
+    for course in courses:
+        course_num = dept + " " + course
+        print(course_num, semester)
+        try :
+            course_df = df[df['Course'] == course_num]
+            course_df = course_df[course_df['Semester'] == semester]
+            course_df = course_df.T
+            seats = course_df.loc['Seats'].values[0]
+            W = seats + 100
+            course_df['Seats'] = seats
+            course_df['W'] = W
+            course_df = course_df.iloc[4:].reset_index()
+        except:
+            continue
+        plot_div = plot(
+            {
+                'data': [
+                    go.Scatter(x=course_df['index'],
+                               y=course_df[course_df.columns[1]],
+                               mode='lines+markers',
+                               name='2022'),
+                    go.Scatter(x=course_df['index'],
+                               y=course_df['Seats'],
+                               mode='lines+markers',
+                               name='Seats'),
+                    go.Scatter(x=course_df['index'],
+                               y=course_df['W'],
+                               mode='lines+markers',
+                               name='Predicted')
+                ],
+                'layout': go.Layout(
+                    autosize=False,
+                    width=1000,
+                    height=600,
+                    title={
+                        'text':"We expect " + str(W) + " students to be enrolled in " + course_num + " this Fall",
+                        'xanchor':'left',
+                        'yanchor':'top',
+                        'x':0.1,
+                        'y':0.9
+                    },
+                    xaxis_title="Week",
+                    yaxis_title="Students enrolled",
+                    font_family="Arial",
+                    font_size  =15,
+                    title_font_size=24
+                ),
+                
+            },
+            output_type='div',
+            include_plotlyjs=False)
+        plots.append(plot_div)
+
+    context = {
+        'dept':dept,
+        'depts': depts,
+        'courses': courses,
+        'plots': plots
+    }
+    return render(request, 'ftiacs/dept.html', context)
+    
 def get_placement(gpa, sat, act):
     if gpa == None and sat == None and act == None: return "No MTH placement"
     if gpa != None:
