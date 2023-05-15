@@ -233,7 +233,6 @@ def dept(request, dept):
             course_df['Seats'] = seats
             course_df = course_df.reset_index()
 
-            print('W =', W)
             data = [
                 go.Scatter(x=current['index'],
                            y=current[current_year].astype(int),
@@ -258,34 +257,38 @@ def dept(request, dept):
                            name='Predicted Seats')
             ]
 
+            print('W =', W)
+
+            plot_div = plot(
+                {
+                    'data': data,
+                    
+                    'layout': go.Layout(
+                        autosize=False,
+                        width=1000,
+                        height=600,
+                        title={
+                            'text':"We expect " + str(W) + " students to be enrolled in " + course_num + " this Fall",
+                            'xanchor':'left',
+                            'yanchor':'top',
+                            'x':0.1,
+                            'y':0.9
+                        },
+                        xaxis_title="Week",
+                        yaxis_title="Students enrolled",
+                        font_family="Arial",
+                        font_size  =15,
+                        title_font_size=24
+                    ),
+                    
+                },
+                output_type='div',
+                include_plotlyjs=False)
+            plots.append(plot_div)
+
         except:
             continue
-        plot_div = plot(
-            {
-                'data': data,
-                    
-                'layout': go.Layout(
-                    autosize=False,
-                    width=1000,
-                    height=600,
-                    title={
-                        'text':"We expect " + str(W) + " students to be enrolled in " + course_num + " this Fall",
-                        'xanchor':'left',
-                        'yanchor':'top',
-                        'x':0.1,
-                        'y':0.9
-                    },
-                    xaxis_title="Week",
-                    yaxis_title="Students enrolled",
-                    font_family="Arial",
-                    font_size  =15,
-                    title_font_size=24
-                ),
-                
-            },
-            output_type='div',
-            include_plotlyjs=False)
-        plots.append(plot_div)
+        
 
     if len(plots) == 0:
         plots = None
