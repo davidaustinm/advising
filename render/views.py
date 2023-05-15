@@ -227,13 +227,13 @@ def dept(request, dept):
             current_enrollment = int(current.iloc[-1][current_year])
 
             W = int(baseline + (current_enrollment - baseline)/fraction_attended)
-            print(W)
             current = current.reset_index()
 
             course_df['W'] = W       
             course_df['Seats'] = seats
             course_df = course_df.reset_index()
 
+            print('W =', W)
             data = [
                 go.Scatter(x=current['index'],
                            y=current[current_year].astype(int),
