@@ -211,8 +211,6 @@ def dept(request, dept):
     total_attended = att['total'].sum()
     fraction_attended = total_attended/ftiacs
 
-    print(fraction_attended)
-
     plots = []
     for course in courses:
         course_num = dept + " " + course
@@ -229,6 +227,7 @@ def dept(request, dept):
             current_enrollment = int(current.iloc[-1][current_year])
 
             W = int(baseline + (current_enrollment - baseline)/fraction_attended)
+            print(W)
             current = current.reset_index()
 
             course_df['W'] = W       
