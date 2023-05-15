@@ -223,7 +223,7 @@ def dept(request, dept):
             missing = course_df.iloc[-1][current_year]
 
             current = course_df[course_df[current_year] != missing]
-            baseline = int(current.loc['Week 6'][current_year])
+            baseline = int(current.loc['Week 7'][current_year])
             current_enrollment = int(current.iloc[-1][current_year])
 
             W = int(baseline + (current_enrollment - baseline)/fraction_attended)
