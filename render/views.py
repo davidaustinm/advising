@@ -214,7 +214,6 @@ def dept(request, dept):
     plots = []
     for course in courses:
         course_num = dept + " " + course
-        print(course_num, semester)
         try :
             course_df = df[df['Course'] == course_num].set_index('Semester').T
             seats = course_df[current_year].loc['Seats']
@@ -283,8 +282,6 @@ def dept(request, dept):
                 output_type='div',
                 include_plotlyjs=False)
             plots.append(plot_div)
-            print('W =', W)
-
 
         except:
             continue
