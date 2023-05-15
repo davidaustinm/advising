@@ -298,7 +298,7 @@ def dept(request, dept):
         'depts': depts,
         'plots': plots
     }
-    return render(request, 'ftiacs/dept.html', context)
+    return render(request, 'render/dept.html', context)
 
     
 def get_placement(gpa, sat, act):
