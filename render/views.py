@@ -257,8 +257,6 @@ def dept(request, dept):
                            name='Predicted Seats')
             ]
 
-            print('W =', W)
-
             plot_div = plot(
                 {
                     'data': data,
@@ -285,6 +283,8 @@ def dept(request, dept):
                 output_type='div',
                 include_plotlyjs=False)
             plots.append(plot_div)
+            print('W =', W)
+
 
         except:
             continue
