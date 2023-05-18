@@ -64,8 +64,14 @@
 	  </td>
 	</tr>
 
-	{% if plots %}
-	{% for plot in plots %}
+	<tr>
+	  <td>
+	    <h2> {{ fall }} </h2>
+	  </td>
+	</tr>
+
+	{% if fallplots %}
+	{% for plot in fallplots %}
 	<tr>
 	  <td>
 	    {% autoescape off %}
@@ -79,14 +85,43 @@
 	  </td>
 	</tr>
 	{% endfor %}
-	
 	{% else %}
 	<tr>
 	  <td>
-	    <h3> There are currently no data for this department. </h3>
+	    <h3> There are currently no data for this department.</h3>
 	  </td>
 	</tr>
 	{% endif %}
+
+	<tr>
+	  <td>
+	    <h2> {{ winter }} </h2>
+	  </td>
+	</tr>
+
+	{% if winterplots %}
+	{% for plot in winterplots %}
+	<tr>
+	  <td>
+	    {% autoescape off %}
+	    {{ plot }}
+	    {% endautoescape %}
+	  </td>
+	</tr>
+	<tr>
+	  <td>
+	    <hr />
+	  </td>
+	</tr>
+	{% endfor %}
+	{% else %}
+	<tr>
+	  <td>
+	    <h3> There are currently no data for this department.</h3>
+	  </td>
+	</tr>
+	{% endif %}
+
       </table>
     </div>
 

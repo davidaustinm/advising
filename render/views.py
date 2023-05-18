@@ -9,6 +9,7 @@ import plotly.graph_objs as go
 
 from render.forms import GPAForm
 import os
+import itertools
 
 # Create your views here.
 
@@ -114,77 +115,6 @@ def enrollment(request):
     return render(request, 'render/enrollment.html', context)
 
 '''
-def dept(request, dept): 
-    courses = course_dict[dept]
-    semester = 'Fall ' + str(year)
-
-    module_dir = os.path.dirname(__file__)  
-    file_path = os.path.join(module_dir, 'weekly_course.csv')
-    df = pd.read_csv(file_path)
-
-    plots = []
-    for course in courses:
-        course_num = dept + " " + course
-        print(course_num, semester)
-        try :
-            course_df = df[df['Course'] == course_num]
-            course_df = course_df[course_df['Semester'] == semester]
-            course_df = course_df.T
-            seats = course_df.loc['Seats'].values[0]
-            W = seats + 100
-            course_df['Seats'] = seats
-            course_df['W'] = W
-            course_df = course_df.iloc[4:].reset_index()
-        except:
-            continue
-        plot_div = plot(
-            {
-                'data': [
-                    go.Scatter(x=course_df['index'],
-                               y=course_df[course_df.columns[1]],
-                               mode='lines+markers',
-                               name='2022'),
-                    go.Scatter(x=course_df['index'],
-                               y=course_df['Seats'],
-                               mode='lines+markers',
-                               name='Seats'),
-                    go.Scatter(x=course_df['index'],
-                               y=course_df['W'],
-                               mode='lines+markers',
-                               name='Predicted')
-                ],
-                'layout': go.Layout(
-                    autosize=False,
-                    width=1000,
-                    height=600,
-                    title={
-                        'text':"We expect " + str(W) + " students to be enrolled in " + course_num + " this Fall",
-                        'xanchor':'left',
-                        'yanchor':'top',
-                        'x':0.1,
-                        'y':0.9
-                    },
-                    xaxis_title="Week",
-                    yaxis_title="Students enrolled",
-                    font_family="Arial",
-                    font_size  =15,
-                    title_font_size=24
-                ),
-                
-            },
-            output_type='div',
-            include_plotlyjs=False)
-        plots.append(plot_div)
-
-    context = {
-        'dept': dept,
-        'depts': depts,
-        'plots': plots
-    }
-    return render(request, 'render/dept.html', context)
-#    return enrollment(request)
-'''
-
 def dept(request, dept):
     courses = course_dict[dept]
     semester = 'Fall ' + str(year)
@@ -296,6 +226,142 @@ def dept(request, dept):
         'plots': plots
     }
     return render(request, 'render/dept.html', context)
+'''
+
+def dept(request, dept):
+    courses = course_dict[dept]
+    semester = 'Fall ' + str(year)
+    fall_semester = semester
+    winter_semester = 'Winter ' + str(year + 1)
+
+    last_year = 'Fall ' + str(year - 1)
+    current_year = 'Fall ' + str(year)
+
+    module_dir = os.path.dirname(__file__)  
+    file_path = os.path.join(module_dir, 'weekly_enrollment.csv')
+    df = pd.read_csv(file_path, skiprows=5)
+
+    col_dict = {df.columns[0]: 'Semester', df.columns[1]: 'Course'}
+    df = df.rename(columns = col_dict)
+
+    def good_year(x):
+        return x == last_year or x == current_year
+    
+    df = df[df['Semester'].apply(good_year)]
+
+    file_path = os.path.join(module_dir, 'attendance.csv')
+    att = pd.read_csv(file_path, index_col=0).T
+    att = att[att['total'].isna() == False]
+    att['total'] = att['total'].astype(int)
+    total_attended = att['total'].sum()
+    fraction_attended = total_attended/ftiacs
+
+    file_path = os.path.join(module_dir, 'caps.csv')
+    managed_caps = pd.read_csv(file_path)
+    caps = {sem: managed_caps[managed_caps['Semester'] == sem].set_index('Course')
+            for sem in [fall_semester, winter_semester]}
+
+    fall_plots = []
+    winter_plots = []
+    for course, semester in itertools.product(courses, [fall_semester, winter_semester]):
+        course_num = dept + " " + course
+        try :
+            course_df = df[df['Course'] == course_num].set_index('Semester').T
+            seats = course_df[current_year].loc['Seats']
+            current_seats = int(seats)
+            try :
+                released = float(caps[semester].loc[course_num]['% Released'])
+                current_seats = int(round(float(seats) * 100 /released))
+            except:
+                pass
+            
+            weeks = ['Week ' + str(w) for w in range(1,26)]
+            course_df = course_df.loc[weeks]
+            missing = course_df.iloc[-1][current_year]
+
+            current = course_df[course_df[current_year] != missing]
+            baseline = int(current.loc['Week 7'][current_year])
+            current_enrollment = int(current.iloc[-1][current_year])
+
+            W = int(baseline + (current_enrollment - baseline)/fraction_attended)
+            current = current.reset_index()
+
+            course_df['W'] = W       
+            course_df['Seats'] = current_seats
+            course_df = course_df.reset_index()
+
+            data = [
+                go.Scatter(x=current['index'],
+                           y=current[current_year].astype(int),
+                           mode='lines+markers',
+                           name=current_year)
+            ]
+                
+            if last_year in course_df.columns:
+                data.append(
+                    go.Scatter(x=course_df['index'],
+                               y=course_df[last_year].astype(int),
+                               mode='lines+markers',
+                               name=last_year))
+            data += [
+                go.Scatter(x=course_df['index'],
+                           y=course_df['Seats'],
+                           mode='lines+markers',
+                           name='Current Seats'),
+                go.Scatter(x=course_df['index'],
+                           y=course_df['W'],
+                           mode='lines+markers',
+                           name='Predicted Seats')
+            ]
+
+        except:
+            continue
+        plot_div = plot(
+            {
+                'data': data,
+                    
+                'layout': go.Layout(
+                    autosize=False,
+                    width=1000,
+                    height=600,
+                    title={
+                        'text':"We expect " + str(W) + " students to be enrolled in " + course_num + " this " + semester.split()[0],
+                        'xanchor':'left',
+                        'yanchor':'top',
+                        'x':0.1,
+                        'y':0.9
+                    },
+                    xaxis_title="Week",
+                    yaxis_title="Students enrolled",
+                    font_family="Arial",
+                    font_size  =15,
+                    title_font_size=24
+                ),
+                
+            },
+            output_type='div',
+            include_plotlyjs=False)
+        if semester.startswith('Fall'):
+            fall_plots.append(plot_div)
+        else:
+            winter_plots.append(plot_div)
+
+    if len(fall_plots) == 0:
+        fall_plots = None
+    if len(winter_plots) == 0:
+        winter_plots = None
+    
+    context = {
+        'dept':dept,
+        'depts': depts,
+        'courses': courses,
+        'fall': fall_semester,
+        'winter': winter_semester,
+        'fallplots': fall_plots,
+        'winterplots': winter_plots
+    }
+    return render(request, 'render/dept.html', context)
+
 
     
 def get_placement(gpa, sat, act):
