@@ -244,11 +244,6 @@ def dept(request, dept):
     col_dict = {df.columns[0]: 'Semester', df.columns[1]: 'Course'}
     df = df.rename(columns = col_dict)
 
-    def good_year(x):
-        return x == last_year or x == current_year
-    
-    df = df[df['Semester'].apply(good_year)]
-
     file_path = os.path.join(module_dir, 'attendance.csv')
     att = pd.read_csv(file_path, index_col=0).T
     att = att[att['total'].isna() == False]
@@ -265,8 +260,14 @@ def dept(request, dept):
     winter_plots = []
     for course, semester in itertools.product(courses, [fall_semester, winter_semester]):
         course_num = dept + " " + course
+        term, yr = semester.split()
+        current_year = semester
+        last_year = term + ' ' + str(int(year) - 1)
+    
+        semester_df = df[df['Semester'].apply(lambda x: x == current_year or x == last_year)]
+        
         try :
-            course_df = df[df['Course'] == course_num].set_index('Semester').T
+            course_df = semester_df[semester_df['Course'] == course_num].set_index('Semester').T
             seats = course_df[current_year].loc['Seats']
             current_seats = int(seats)
             try :
