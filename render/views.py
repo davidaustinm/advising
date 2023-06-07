@@ -262,7 +262,7 @@ def dept(request, dept):
         course_num = dept + " " + course
         term, yr = semester.split()
         current_year = semester
-        last_year = term + ' ' + str(int(year) - 1)
+        last_year = term + ' ' + str(int(yr) - 1)
     
         semester_df = df[df['Semester'].apply(lambda x: x == current_year or x == last_year)]
         
